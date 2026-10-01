@@ -10,6 +10,7 @@ interface AudioUploaderProps {
 
 export const AudioUploader: React.FC<AudioUploaderProps> = ({ onAudioSelected, currentAudio, onClear }) => {
   const [isDragging, setIsDragging] = useState(false);
+  const [fileError, setFileError] = useState<string | null>(null);
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -22,7 +23,8 @@ export const AudioUploader: React.FC<AudioUploaderProps> = ({ onAudioSelected, c
   }, []);
 
   const processFile = (file: File) => {
-    if (file && file.type.startsWith('audio/')) {
+    setFileError(null);
+    if (file && (file.type.startsWith('audio/') || /\.(mp3|wav|m4a|aac|ogg|webm|flac)$/i.test(file.name))) {
         const url = URL.createObjectURL(file);
         onAudioSelected({
             file,
@@ -30,7 +32,7 @@ export const AudioUploader: React.FC<AudioUploaderProps> = ({ onAudioSelected, c
             url
         });
     } else {
-        alert("Please upload a valid audio file.");
+        setFileError("Please upload a valid audio file (MP3, WAV, M4A, etc.).");
     }
   };
 
@@ -116,6 +118,9 @@ export const AudioUploader: React.FC<AudioUploaderProps> = ({ onAudioSelected, c
             <span className="px-2 py-1 bg-slate-800 rounded text-xs text-slate-500 border border-slate-700">WAV</span>
             <span className="px-2 py-1 bg-slate-800 rounded text-xs text-slate-500 border border-slate-700">M4A</span>
         </div>
+        {fileError && (
+          <p className="text-xs text-red-400 mt-2">{fileError}</p>
+        )}
       </div>
     </div>
   );

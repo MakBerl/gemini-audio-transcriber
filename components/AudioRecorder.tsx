@@ -13,11 +13,13 @@ interface AudioRecorderProps {
 export const AudioRecorder: React.FC<AudioRecorderProps> = ({ onRecordingComplete, onClear, hasAudio }) => {
   const [isRecording, setIsRecording] = useState(false);
   const [duration, setDuration] = useState(0);
+  const [micError, setMicError] = useState<string | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
   const timerRef = useRef<number | null>(null);
 
   const startRecording = async () => {
+    setMicError(null);
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       const mediaRecorder = new MediaRecorder(stream);
@@ -56,7 +58,7 @@ export const AudioRecorder: React.FC<AudioRecorderProps> = ({ onRecordingComplet
 
     } catch (err) {
       console.error("Error accessing microphone:", err);
-      alert("Could not access microphone. Please ensure permissions are granted.");
+      setMicError("Could not access microphone. Please ensure microphone permissions are granted in your browser.");
     }
   };
 
@@ -146,6 +148,10 @@ export const AudioRecorder: React.FC<AudioRecorderProps> = ({ onRecordingComplet
             </Button>
         )}
       </div>
+
+      {micError && (
+        <p className="mt-4 text-xs text-red-400 text-center max-w-xs">{micError}</p>
+      )}
     </div>
   );
 };

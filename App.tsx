@@ -63,7 +63,7 @@ const App: React.FC = () => {
              <h1 className="text-xl font-bold text-white tracking-tight">Gemini<span className="text-indigo-400">Scribe</span></h1>
           </div>
           <div className="text-sm text-slate-400 hidden sm:block">
-            Powered by Google Gemini 2.0 Flash
+            Powered by Google Gemini 3.6 Flash
           </div>
         </div>
       </header>
